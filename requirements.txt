@@ -1,0 +1,8 @@
+requests
+lunar_python
+requests
+pyyaml
+lxml
+pillow
+fastapi
+uvicorn
