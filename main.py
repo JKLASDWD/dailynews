@@ -1,7 +1,6 @@
 from typing import List
 
 import Dailynews
-import Pic_generate
 from PIL import Image, ImageDraw, ImageFont
 import yaml
 
