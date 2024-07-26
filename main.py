@@ -1,4 +1,3 @@
-from typing import List
 
 import Dailynews
 from PIL import Image, ImageDraw, ImageFont

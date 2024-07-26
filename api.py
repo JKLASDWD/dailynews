@@ -3,14 +3,10 @@ import os
 import fastapi.responses
 import uvicorn
 import yaml
-from fastapi import FastAPI, HTTPException
-from pydantic import BaseModel
-import re
-from typing import List
-import Dailynews
+from fastapi import FastAPI
 app = FastAPI()
 
-news = Dailynews.DailyNews()
+
 
 @app.get("/pic")
 async def root():
