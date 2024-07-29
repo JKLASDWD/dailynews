@@ -32,7 +32,10 @@ class DailyNews:
 
     def get_news(self):
         self.read_url_from_yml()
-        url = "{0}/{1}".format(self.agent_url, self.target_url)
+        # today_ = datetime.datetime.today().strftime("%#m月%d日")
+        today_ = "7月28日"
+        url = "{0}/{1}/{2}".format(self.agent_url, self.target_url, today_)
+        print(url)
         response = requests.get(
             url,
             headers=
@@ -50,8 +53,8 @@ class DailyNews:
         # 正则表达式用于匹配<a>标签及其内容
         day_lunar = Lunar.fromDate(datetime.datetime.now())
         day_solar = Solar.fromDate(datetime.datetime.now())
-        pattern_a = re.compile(r'<a\s+[^>]*>(.*?)</a>', re.DOTALL)
 
+        pattern_a = re.compile(r'<a\s+[^>]*>(.*?)</a>', re.DOTALL)
         # 使用sub方法替换匹配的<a>标签为其内容
         self.text = pattern_a.sub(r'\1', self.text)
 
@@ -62,6 +65,11 @@ class DailyNews:
         # small标签及内容去除
         pattern_c = re.compile(r'<small>(.*?)</small>', re.DOTALL)
         self.text = pattern_c.sub(r'', self.text)
+
+        pattern_d = re.compile(r'<span\s+[^>]*>(.*?)</span>', re.DOTALL)
+        self.text = pattern_d.sub(r'', self.text)
+
+        self.text = self.text.replace(u'\xa0', u'')
 
         xpath_analyse = etree.HTML(self.text)
         daily_content = xpath_analyse.xpath('//div[@class="event"]/dd/text()')
