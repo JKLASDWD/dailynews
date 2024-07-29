@@ -32,8 +32,8 @@ class DailyNews:
 
     def get_news(self):
         self.read_url_from_yml()
-        # today_ = datetime.datetime.today().strftime("%#m月%d日")
-        today_ = "7月28日"
+        today_ = datetime.datetime.today().strftime("%#m月%d日")
+        # today_ = "7月28日"
         url = "{0}/{1}/{2}".format(self.agent_url, self.target_url, today_)
         print(url)
         response = requests.get(
@@ -66,6 +66,7 @@ class DailyNews:
         pattern_c = re.compile(r'<small>(.*?)</small>', re.DOTALL)
         self.text = pattern_c.sub(r'', self.text)
 
+        #去除span标签
         pattern_d = re.compile(r'<span\s+[^>]*>(.*?)</span>', re.DOTALL)
         self.text = pattern_d.sub(r'', self.text)
 
