@@ -8,6 +8,9 @@ on:
     branches: [ "master" ]
   pull_request:
     branches: [ "master" ]
+  schedule:
+    # 对应北京时间 (UTC+8) 每天 07:30 AM
+    - cron: '30 23 * * *'
 
 permissions:
   contents: write
