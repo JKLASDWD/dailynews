@@ -1,3 +1,4 @@
+import os
 
 import Dailynews
 from PIL import Image, ImageDraw, ImageFont
@@ -38,7 +39,11 @@ news.touhou_get_fes()
 
 image = Image.open("template.png")
 draw = ImageDraw.Draw(image)
-font = ImageFont.truetype(news.font_path, 30)
+
+script_dir = os.path.dirname(os.path.abspath(__file__))
+font_path_absolute = os.path.join(script_dir, news.font_path)
+
+font = ImageFont.truetype(font_path_absolute, 30)
 
 # 历史上的今天：年份
 x = 50
