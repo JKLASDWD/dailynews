@@ -28,11 +28,12 @@ jobs:
         python -m pip install --upgrade pip
         pip install BeautifulSoup4
         pip install -r requirements.txt
-    - name: Run Python script
-        # 关键步骤：将 GitHub Secrets 映射到环境变量
-      env:
-          # PY_API_KEY 是您的 Python 脚本将要读取的环境变量名称
-          # secrets.API_KEY 是您在步骤二中设置的 GitHub Secret 名称
-          agent_url: ${{ secrets.agent_url }}
-      run: |
-          python main.py # 运行您的主程序
+    - name : debug
+      run : |
+        ls -R
+    # - name: Run Python script
+        
+    #   env:
+    #       agent_url: ${{ secrets.agent_url }}
+    #   run: |
+    #       python main.py # 运行您的主程序
