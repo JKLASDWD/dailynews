@@ -1,10 +1,12 @@
 import datetime
+import os
 
 import requests
 import yaml
 from lxml import etree
 import re
 from lunar_python import Lunar, Solar
+from bs4 import BeautifulSoup, Comment
 
 
 # 注意审查
@@ -26,15 +28,21 @@ class DailyNews:
     def read_url_from_yml(self):
         with open('settings.yml', 'r') as stream:
             data = yaml.safe_load(stream)
-            self.agent_url = data['agent_url']
+            if os.environ.get('agent_url') is not None:
+                self.agent_url = os.environ.get('agent_url')
+            else:
+                self.agent_url = data['agent_url']
             self.target_url = data['target_url']
             self.font_path = data['font_path']
 
     def get_news(self):
         self.read_url_from_yml()
-        today_ = datetime.datetime.today().strftime("%#m月%d日")
+        today_ = datetime.datetime.today().strftime("%#m月%#d日")
         # today_ = "7月28日"
-        url = "{0}/{1}/{2}".format(self.agent_url, self.target_url, today_)
+        if self.agent_url is None:
+            url = "{0}/{1}".format(self.target_url, today_)
+        else:
+            url = "{0}/{1}/{2}".format(self.agent_url, self.target_url, today_)
         print(url)
         response = requests.get(
             url,
@@ -92,25 +100,61 @@ class DailyNews:
         self.today_solar_fes = Solar.getFestivals(day_solar)
 
     def touhou_get_fes(self):
-        with open("date.txt", "r+", encoding="UTF-8") as f:
-            t = f.readlines()
-            str = t[0]
-            pattern_d = re.compile(r"\d{4}年\d{2}月\d{2}日 (.+)")
-            match = pattern_d.findall(str)
-            self.touhou_festival = match[0].split("、")
-            f.seek(0)
-            f.writelines(t[1:])
-            f.truncate()
+        today_str = datetime.datetime.now().strftime('%Y年%m月%d日')
+        raw_http_url = "https://zh.moegirl.org.cn/User:JKLASDWD/Sandbox"
+        response = requests.get(
+            raw_http_url,
+            headers=
+            {
+                'User-Agent': 'Mozilla/5.0',
+                'Accept-Language': 'en,zh-CN;q=0.9,zh;q=0.8'
+            }
+        )
+        soup = BeautifulSoup(response.text, 'html.parser')
+        schedule_div = soup.find('div', class_='mw-collapsible')
+
+        found_event = None
+        if schedule_div:
+            list_items = schedule_div.find_all('li')
+            for li in list_items:
+                li_str = str(li)
+                clean_text = re.sub(r'<[^>]+>', '', li_str)
+                clean_text = clean_text.strip()
+
+                if clean_text.startswith(today_str):
+                    # --- 6. 提取内容 ---
+                    # 替换掉日期字符串，只保留事件内容
+                    event_content = clean_text.replace(today_str, "", 1).strip()
+                    found_event = event_content
+
+                    self.touhou_festival = event_content.split("、")
+                    break  # 找到后就停止循环
+        else:
+            print("错误：没有找到 class='mw-collapsible' 的 div")
+
+
+
+        # with open("date.txt", "r+", encoding="UTF-8") as f:
+        #     t = f.readlines()
+        #     str = t[0]
+        #     pattern_d = re.compile(r"\d{4}年\d{2}月\d{2}日 (.+)")
+        #     match = pattern_d.findall(str)
+        #     self.touhou_festival = match[0].split("、")
+        #     f.seek(0)
+        #     f.writelines(t[1:])
+        #     f.truncate()
 
 
 if __name__ == '__main__':
     news = DailyNews()
-    news.get_news()
-    news.analyze()
+    # news.get_news()
+    # news.analyze()
+    # news.touhou_get_fes()
+    # print(news.news_year)
+    # print(news.news_content)
+    # print(news.today_content)
+    # print(news.today_yi)
+    # print(news.today_ji)
+    # print(news.touhou_festival)
     news.touhou_get_fes()
-    print(news.news_year)
-    print(news.news_content)
-    print(news.today_content)
-    print(news.today_yi)
-    print(news.today_ji)
-    print(news.touhou_festival)
+

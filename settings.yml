@@ -1,4 +1,4 @@
 agent_url:
-target_url : https://worker-lively-frog-feb4.jklasdwd.tech/https://zh.wikipedia.org/wiki/Wikipedia:%E5%8E%86%E5%8F%B2%E4%B8%8A%E7%9A%84%E4%BB%8A%E5%A4%A9/ # zh_wikipedia_news add content filter?
+target_url : https://zh.wikipedia.org/wiki/Wikipedia:%E5%8E%86%E5%8F%B2%E4%B8%8A%E7%9A%84%E4%BB%8A%E5%A4%A9 # zh_wikipedia_news add content filter?
 pic_path : template.png
 font_path : font4.ttf
