@@ -33,7 +33,10 @@ class DailyNews:
             else:
                 self.agent_url = data['agent_url']
             self.target_url = data['target_url']
+
+            script_dir = os.path.dirname(os.path.abspath(__file__))
             self.font_path = data['font_path']
+            self.font_path = os.path.join(script_dir, self.font_path)
 
     def get_news(self):
         self.read_url_from_yml()
