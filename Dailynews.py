@@ -40,7 +40,10 @@ class DailyNews:
 
     def get_news(self):
         self.read_url_from_yml()
-        today_ = datetime.datetime.today().strftime("%#m月%#d日")
+        today = datetime.datetime.today()
+
+        today_ = f"{today.month}月{today.day}日"
+
         # today_ = "7月28日"
         if self.agent_url is None:
             url = "{0}/{1}".format(self.target_url, today_)
