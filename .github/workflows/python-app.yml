@@ -31,9 +31,9 @@ jobs:
     - name : debug
       run : |
         ls -R
-    # - name: Run Python script
+    - name: Run Python script
         
-    #   env:
-    #       agent_url: ${{ secrets.agent_url }}
-    #   run: |
-    #       python main.py # 运行您的主程序
+      env:
+          agent_url: ${{ secrets.agent_url }}
+      run: |
+          python main.py # 运行您的主程序
